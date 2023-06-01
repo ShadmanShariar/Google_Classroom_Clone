@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Home</title>
+</head>
+<body style="margin: 0%; padding: 0%;">
+    
+<nav>
+
+<ul style="list-style-type: none; border: 1px solid black; padding: 0.5%; display: flex;">
+
+<li><img style="width: 10%; margin-left: 5%;margin-top: 2px;" src="assets/logo.png" alt=""></li>
+<li><img style="width: 40px;margin-right: 100px;" id="joinclass" src="assets/join.jpg" alt=""></li>
+<li><img style="width: 35px; margin-right: 100px;margin-top: 1px;" id="createclass" src="assets/create.png" alt=""></li>
+</ul>
+
+</nav>
+<div align="center">
+  <input style="margin: 0%; padding: 1%;" id="remail" type="text" placeholder="Enter you email here">
+  <button style="margin: 0%; padding: 1%;" id="reload" class="log">Reload Courses</button>
+</div>
+
+
+<ul style="list-style-type: none; display: flex; flex-wrap: wrap;" id="classes">
+
+
+</ul>
+
+
+<script type="module">
+
+
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+  import { getDatabase, ref, set,get, child, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBSR9j1YMKGoE5Z0izmfsYx9VrhBDec5zA",
+    authDomain: "classroom-115e9.firebaseapp.com",
+    projectId: "classroom-115e9",
+    storageBucket: "classroom-115e9.appspot.com",
+    messagingSenderId: "1083631232004",
+    appId: "1:1083631232004:web:93a8dbd2f842117e988151"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+
+  // get ref
+  const db = getDatabase(app);
+
+  document.getElementById("createclass").addEventListener('click',function(e){
+    e.preventDefault();
+    let email = prompt("Enter your email here");
+    let cname = prompt("Enter your course name");
+    let code  = prompt("Enter your course code");
+
+    set(ref(db, 'courses/'+code+' '+cname),{
+
+     Class_Name : cname,
+     Class_Code : code
+
+    })
+    set(ref(db, 'faculty/'+email+' '+code),{
+
+Email : email,
+Class_Code : code
+
+})
+    window.location.href="home.html";
+  })
+
+
+  document.getElementById("joinclass").addEventListener('click',function(e){
+    e.preventDefault();
+    let email = prompt("Enter your email here");
+    let code  = prompt("Enter your course code");
+
+    set(ref(db, 'faculty/'+email+' '+code),{
+
+Email : email,
+Class_Code : code
+
+})
+    window.location.href="home.html";
+  })
+
+
+  document.getElementById("reload").addEventListener('click',function(e){
+    e.preventDefault();
+    let email = document.getElementById("remail").value;
+    let tmp = [];
+    
+   
+
+
+alert(email);
+
+
+    window.location.href="home.html";
+  })
+
+
+
+var html = "";
+onValue(ref(db, 'courses/'), (snapshot) => {
+  const data = snapshot.val();
+
+for(let x of Object.keys(data)){
+ let tmp = x.split(" ");
+  html += "<li id=\"part\">";
+        html+=tmp[1]+" "+tmp[2];
+        html += "</li>";
+//  ans = ans+""+(Object.keys(data)[0]);
+  }
+  document.getElementById("classes").innerHTML = html;
+ 
+});
+
+
+</script>
+<Script src="set.js"></Script>
+</body>
+</html>
